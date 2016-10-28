@@ -27,7 +27,6 @@ package de.l3s.archivespark.specific.books
 import java.time.LocalDateTime
 
 import de.l3s.archivespark.utils.JsonConvertible
-import org.joda.time.format.DateTimeFormat
 
 import scala.util.Try
 import scala.xml._
@@ -36,16 +35,17 @@ object BookMetaData {
   val DateTimeFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
   def fromMap(meta: Map[String, Seq[String]]): Option[BookMetaData] = {
+      val raw = meta.map{case (key, value) => (key, value.toList)}
       Some(BookMetaData(
-        meta.getOrElse("title", Seq("")).head,
-        meta.getOrElse("creator", Seq("")).head,
-        meta.getOrElse("publisher", Seq("")).head,
-        meta.getOrElse("date", Seq("")).head,
-        meta.getOrElse("language", Seq("")).head,
-        meta.getOrElse("publicdate", Seq("")).head,
-        meta.getOrElse("subject", Seq()),
-        meta.getOrElse("collection", Seq()),
-        meta
+        raw.getOrElse("title", Seq("")).head,
+        raw.getOrElse("creator", Seq("")).head,
+        raw.getOrElse("publisher", Seq("")).head,
+        raw.getOrElse("date", Seq("")).head,
+        raw.getOrElse("language", Seq("")).head,
+        raw.getOrElse("publicdate", Seq("")).head,
+        raw.getOrElse("subject", Seq()),
+        raw.getOrElse("collection", Seq()),
+        raw
       ))
   }
 
@@ -55,7 +55,7 @@ object BookMetaData {
     val map = xml.child.flatMap { child =>
       if (child.isAtom || child.child.size != 1) Iterator.empty
       else Iterator(child.label -> child.child.head.mkString)
-    }.groupBy{case (key, value) => key}.mapValues{case keyValues => keyValues.map{case (key, value) => value}}
+    }.groupBy{case (key, value) => key}.mapValues(keyValues => keyValues.map{case (key, value) => value})
     fromMap(map)
   }.getOrElse(None)
 }

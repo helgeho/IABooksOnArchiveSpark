@@ -16,8 +16,9 @@ lazy val archivespark = (project in file(".")).
         ExclusionRule(organization = "org.apache.hadoop"),
         ExclusionRule(organization = "org.scala-lang"),
         ExclusionRule(organization = "com.google.guava")),
+      "org.apache.hadoop" % "hadoop-client" % "2.5.0" % "provided",
       "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
-      "de.l3s" %% "archivespark" % "2.0.1" % "provided"
+      "de.l3s" %% "archivespark" % "2.1.0" % "provided"
     ),
     resolvers ++= Seq(
       "internetarchive" at "http://builds.archive.org/maven2"
