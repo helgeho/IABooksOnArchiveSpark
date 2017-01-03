@@ -12,7 +12,7 @@ However, this is not a requirement, so please feel free to choose any package na
 
 The MIT License (MIT)
 
-Copyright (c) 2015-2016 Helge Holzmann ([L3S](http://www.L3S.de)) and Vinay Goel ([Internet Archive](http://www.archive.org))
+Copyright (c) 2016-2017 Helge Holzmann ([L3S](http://www.L3S.de)) and Vinay Goel ([Internet Archive](http://www.archive.org))
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
