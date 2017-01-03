@@ -37,8 +37,7 @@ import collection.JavaConverters._
 class IATxtBookAccessor(detailsUrl: String) extends DataAccessor[String] {
   override def get: Option[String] = {
     val url = new URL(detailsUrl.replace("/details/", "/download/"))
-    val txtFile = Jsoup.parse(url, 0).select("a").iterator.asScala.map(_.attr("href")).find(_.endsWith("txt"))
-    if (txtFile.isEmpty) return null
-    Try{Source.fromURL(new URL(url + "/" + txtFile.get)).mkString}.toOption
+    val txtFile = Jsoup.parse(url, 0).select("a").iterator.asScala.map(_.attr("href")).find(_.endsWith("_djvu.txt"))
+    txtFile.flatMap(filename => Try{Source.fromURL(new URL(url + "/" + filename)).mkString}.toOption)
   }
 }

@@ -35,18 +35,18 @@ object BookMetaData {
   val DateTimeFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
   def fromMap(meta: Map[String, Seq[String]]): Option[BookMetaData] = {
-      val raw = meta.map{case (key, value) => (key, value.toList)}
-      Some(BookMetaData(
-        raw.getOrElse("title", Seq("")).head,
-        raw.getOrElse("creator", Seq("")).head,
-        raw.getOrElse("publisher", Seq("")).head,
-        raw.getOrElse("date", Seq("")).head,
-        raw.getOrElse("language", Seq("")).head,
-        raw.getOrElse("publicdate", Seq("")).head,
-        raw.getOrElse("subject", Seq()),
-        raw.getOrElse("collection", Seq()),
-        raw
-      ))
+    val raw = meta.map{case (key, value) => (key, value.toList)}
+    Some(BookMetaData(
+      raw.getOrElse("title", Seq("")).head,
+      raw.getOrElse("creator", Seq("")).head,
+      raw.getOrElse("publisher", Seq("")).head,
+      raw.getOrElse("date", Seq("")).head,
+      raw.getOrElse("language", Seq("")).head,
+      raw.getOrElse("publicdate", Seq("")).head,
+      raw.getOrElse("subject", Seq()),
+      raw.getOrElse("collection", Seq()),
+      raw
+    ))
   }
 
   def fromXml(xml: String): Option[BookMetaData] = fromXml(XML.loadString(xml))

@@ -34,7 +34,7 @@ class IATxtBooksHdfsSpec private(metaPath: String) extends DataSpec[(String, Str
   override def parse(data: (String, String)): Option[TxtBookRecord] = {
     val (filename, text) = data
     BookMetaData.fromXml(text).flatMap { meta =>
-      meta.raw.getOrElse(DetailsUrlMetaField, Seq()).headOption.map { url =>
+      meta.raw.getOrElse(DetailsUrlMetaField, Seq.empty).headOption.map { url =>
         new TxtBookRecord(meta, new IATxtBookAccessor(url))
       }
     }
