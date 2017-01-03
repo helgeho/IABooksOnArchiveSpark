@@ -1,5 +1,3 @@
-import java.io.File
-
 lazy val commonSettings = Seq(
   name := "ia-books-archivespark",
   organization := "de.l3s",
@@ -21,17 +19,9 @@ lazy val archivespark = (project in file(".")).
       "de.l3s" %% "archivespark" % "2.1.1" % "provided"
     ),
     resolvers ++= Seq(
-      "internetarchive" at "http://builds.archive.org/maven2"
-    ),
-    publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository"))),
-    pomExtra :=
-      <licenses>
-        <license>
-          <name>MIT License</name>
-          <url>http://www.opensource.org/licenses/mit-license.php</url>
-          <distribution>repo</distribution>
-        </license>
-      </licenses>
+      "internetarchive" at "http://builds.archive.org/maven2",
+      Resolver.mavenLocal
+    )
   )
 
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
