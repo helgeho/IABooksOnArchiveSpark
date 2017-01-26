@@ -25,22 +25,22 @@
 package de.l3s.archivespark.specific.books
 
 import de.l3s.archivespark.dataspecs.{DataSpec, TextFileDataLoader}
+import de.l3s.archivespark.dataspecs.access.HdfsTextFileAccessor
+import org.apache.hadoop.fs.Path
 
-class IATxtBooksHdfsSpec private (metaPath: String) extends DataSpec[(String, String), TxtBookRecord] with TextFileDataLoader {
-  val DetailsUrlMetaField = "identifier-access"
+class IATxtBooksDjvuHdfsSpec private (metaPath: String, djvuPath: String) extends DataSpec[(String, String), TxtBookRecord] with TextFileDataLoader {
+  val DjvuFileSuffix = "_djvu.txt"
 
   override def dataPath: String = metaPath
 
   override def parse(data: (String, String)): Option[TxtBookRecord] = {
     val (filename, text) = data
-    BookMetaData.fromXml(text).flatMap { meta =>
-      meta.raw.getOrElse(DetailsUrlMetaField, Seq.empty).headOption.map { url =>
-        new TxtBookRecord(meta, new IATxtBookAccessor(url))
-      }
+    BookMetaData.fromXml(text).map { meta =>
+      new TxtBookRecord(meta, new HdfsTextFileAccessor(new Path(djvuPath, meta.id + DjvuFileSuffix).toString))
     }
   }
 }
 
-object IATxtBooksHdfsSpec {
-  def apply(metaPath: String): IATxtBooksHdfsSpec = new IATxtBooksHdfsSpec(metaPath)
+object IATxtBooksDjvuHdfsSpec {
+  def apply(metaPath: String, djvuPath: String): IATxtBooksDjvuHdfsSpec = new IATxtBooksDjvuHdfsSpec(metaPath, djvuPath)
 }

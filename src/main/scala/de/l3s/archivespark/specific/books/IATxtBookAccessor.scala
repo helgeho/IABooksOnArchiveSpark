@@ -29,15 +29,16 @@ import java.net.URL
 import de.l3s.archivespark.dataspecs.access.DataAccessor
 import org.jsoup.Jsoup
 
+import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.util.Try
 
-import collection.JavaConverters._
-
 class IATxtBookAccessor(detailsUrl: String) extends DataAccessor[String] {
+  val Encoding = "UTF-8"
+
   override def get: Option[String] = {
     val url = new URL(detailsUrl.replace("/details/", "/download/"))
     val txtFile = Jsoup.parse(url, 0).select("a").iterator.asScala.map(_.attr("href")).find(_.endsWith("_djvu.txt"))
-    txtFile.flatMap(filename => Try{Source.fromURL(new URL(url + "/" + filename)).mkString}.toOption)
+    txtFile.flatMap(filename => Try{Source.fromURL(url + "/" + filename, Encoding).mkString}.toOption)
   }
 }

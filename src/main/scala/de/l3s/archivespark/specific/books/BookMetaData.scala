@@ -36,17 +36,7 @@ object BookMetaData {
 
   def fromMap(meta: Map[String, Seq[String]]): Option[BookMetaData] = {
     val raw = meta.map{case (key, value) => (key, value.toList)}
-    Some(BookMetaData(
-      raw.getOrElse("title", Seq("")).head,
-      raw.getOrElse("creator", Seq("")).head,
-      raw.getOrElse("publisher", Seq("")).head,
-      raw.getOrElse("date", Seq("")).head,
-      raw.getOrElse("language", Seq("")).head,
-      raw.getOrElse("publicdate", Seq("")).head,
-      raw.getOrElse("subject", Seq()),
-      raw.getOrElse("collection", Seq()),
-      raw
-    ))
+    Some(BookMetaData(raw))
   }
 
   def fromXml(xml: String): Option[BookMetaData] = fromXml(XML.loadString(xml))
@@ -60,15 +50,17 @@ object BookMetaData {
   }.getOrElse(None)
 }
 
-case class BookMetaData(title: String,
-                        creator: String,
-                        publisher: String,
-                        date: String,
-                        language: String,
-                        publicdateStr: String,
-                        subjects: Seq[String],
-                        collections: Seq[String],
-                        raw: Map[String, Seq[String]]) extends JsonConvertible {
+case class BookMetaData(raw: Map[String, Seq[String]]) extends JsonConvertible {
+  def id = raw.getOrElse("identifier", Seq("")).head
+  def title = raw.getOrElse("title", Seq("")).head
+  def creator = raw.getOrElse("creator", Seq(""))
+  def publisher = raw.getOrElse("publisher", Seq("")).head
+  def date = raw.getOrElse("date", Seq("")).head
+  def language = raw.getOrElse("language", Seq("")).head
+  def publicdateStr = raw.getOrElse("publicdate", Seq("")).head
+  def subjects = raw.getOrElse("subject", Seq())
+  def collections = raw.getOrElse("collection", Seq())
+
   def publicdate = Try(LocalDateTime.parse(publicdateStr, BookMetaData.DateTimeFormatter)).getOrElse(null)
 
   def toJson: Map[String, Any] = Map[String, Any](
